@@ -1,6 +1,6 @@
 // Create Dynamic Category Section
 
-// fetch load & display the catagory button on html-------
+// fetch load & display the catagory button on html------------------------
 const loadCatagories = () => {
   //   fetch the data
   fetch("https://openapi.programming-hero.com/api/phero-tube/categories")
@@ -9,29 +9,57 @@ const loadCatagories = () => {
     .catch((error) => console.log(error));
 };
 
-// load video-----
+// load video---------------------------------------------------------------
 const loadVideos = () => {
   fetch("https://openapi.programming-hero.com/api/phero-tube/videos")
     .then((res) => res.json())
     .then((data) => displayVideos(data.videos))
     .catch((error) => console.log(error));
 };
+// load categories video on click---------------
+const loadCatagoriesVideo = (id) => {
+  fetch(`https://openapi.programming-hero.com/api/phero-tube/category/${id}`)
+    .then((res) => res.json())
+    .then((data) => displayVideos(data.category))
+    .catch((error) => console.log(error));
+};
+// display the time---------------------------------------------------------
+
+function getTime(time) {
+  const hour = parseInt(time / 3600);
+  let remainingSecond = time % 3600;
+  let minute = parseInt(remainingSecond % 60);
+  remainingSecond = remainingSecond % 60;
+  return `${hour} hour ${minute}minute ${remainingSecond} second ago`;
+}
+// display the time-----------------
+
 // category_id: '1001',
 // category: 'Music'
+
 // create display catagory
+
 const displayCatagories = (categories) => {
   // track all the data from the API array---
   const categoryContainer = document.getElementById("category-container");
+
+  // loop-----
   categories.forEach((item) => {
     console.log(item);
-    const button = document.createElement("button");
+    const buttonContainer = document.createElement("div");
+    buttonContainer.innerHTML = `
+    <button onclick="loadCatagoriesVideo(${item.category_id})" class="btn">${item.category}</button>`;
+    categoryContainer.append(buttonContainer);
+    // ekhane jehetu btn click hobe tai ekhane onclick dewar jnno button banate hbe...eivabe dewa jaccena tai Comment-out korlam...
 
-    // write classList to add class instead of class.add cause i have to add "btn" class to all my button---
+    // const button = document.createElement("button");
 
-    button.classList = "btn";
-    button.innerText = item.category;
-    // add button to category container----
-    categoryContainer.append(button);
+    // // write classList to add class instead of class.add cause i have to add "btn" class to all my button---
+
+    // button.classList = "btn";
+    // button.innerText = item.category;
+    // // add button to category container----
+    // categoryContainer.append(button);
   });
 };
 
@@ -61,15 +89,27 @@ const cardDemo = {
 
 const displayVideos = (videos) => {
   const videosContainer = document.getElementById("video-container");
+  // clear kore debe click hole oi related video show korbe by id--
+  videosContainer.innerHTML = "";
+  // loop---
+
   videos.forEach((video) => {
     console.log(video);
     const card = document.createElement("div");
     card.classList = "card card-compact w-88";
-    card.innerHTML = `<figure class="h-[200px]">
+    card.innerHTML = `<figure class="h-[200px] relative">
     <img class="w-full h=full object-center object-cover"
       src=${video.thumbnail} />
-  </figure >
-  <div class="px-0 py-5 flex gap-2">
+      ${
+        video.others.posted_date?.length === 0
+          ? ""
+          : ` <span class="absolute right-2 bottom-2 bg-black text-xs text-white rounded p-1"> ${getTime(
+              video.others.posted_date
+            )}    </span>`
+      }
+     </figure >
+  
+    <div class="px-0 py-5 flex gap-2">
     <div> <img class="w-10 h-10 rounded-full object-cover object-center" 
       src=${video.authors[0].profile_picture} /></div>
     <div>
