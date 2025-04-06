@@ -16,7 +16,7 @@ const loadVideos = () => {
     .then((data) => displayVideos(data.videos))
     .catch((error) => console.log(error));
 };
-// load categories video on click---------------
+// load video by clicking categories---------------
 const loadCatagoriesVideo = (id) => {
   fetch(`https://openapi.programming-hero.com/api/phero-tube/category/${id}`)
     .then((res) => res.json())
@@ -32,12 +32,12 @@ function getTime(time) {
   remainingSecond = remainingSecond % 60;
   return `${hour} hour ${minute}minute ${remainingSecond} second ago`;
 }
-// display the time-----------------
+// display the time--------------------------------------------------------
 
 // category_id: '1001',
 // category: 'Music'
 
-// create display catagory
+// create display catagory-------------------------------------------------
 
 const displayCatagories = (categories) => {
   // track all the data from the API array---
@@ -48,7 +48,7 @@ const displayCatagories = (categories) => {
     console.log(item);
     const buttonContainer = document.createElement("div");
     buttonContainer.innerHTML = `
-    <button onclick="loadCatagoriesVideo(${item.category_id})" class="btn">${item.category}</button>`;
+    <button id="btn-category" onclick="loadCatagoriesVideo(${item.category_id})" class="btn">${item.category}</button>`;
     categoryContainer.append(buttonContainer);
     // ekhane jehetu btn click hobe tai ekhane onclick dewar jnno button banate hbe...eivabe dewa jaccena tai Comment-out korlam...
 
@@ -63,7 +63,7 @@ const displayCatagories = (categories) => {
   });
 };
 
-// -------------------------------------------
+// -----------------------------------------------------------------------
 
 const cardDemo = {
   category_id: "1003",
@@ -89,10 +89,18 @@ const cardDemo = {
 
 const displayVideos = (videos) => {
   const videosContainer = document.getElementById("video-container");
-  // clear kore debe click hole oi related video show korbe by id--
+  // eta""dewar ane hcce empty kore dewa holo/empty video, clear kore debe,click hole oi related video show korbe by id--
   videosContainer.innerHTML = "";
-  // loop---
 
+  // ekhn j khane click korle api theke kono data pabena sei click a no content command show korte hbe-----
+
+  if (videos.length === 0) {
+    videosContainer.classList.remove("grid");
+    videosContainer.innerHTML = `<div class="min-h-[300px] flex flex-col gap-5 justify-center items-center"><img src="assets/icon.png" /><h2 class="text-center text-xl font-bold">No Content here in this Category</h2></div>`;
+  } else {
+    videosContainer.classList.add("grid");
+  }
+  // loop---
   videos.forEach((video) => {
     console.log(video);
     const card = document.createElement("div");
@@ -111,7 +119,8 @@ const displayVideos = (videos) => {
   
     <div class="px-0 py-5 flex gap-2">
     <div> <img class="w-10 h-10 rounded-full object-cover object-center" 
-      src=${video.authors[0].profile_picture} /></div>
+      src=${video.authors[0].profile_picture} />
+      </div>
     <div>
     <h2 class="font-bold">${video.title}</h2>
     <div class="flex items-center gap-2"><p>${video.authors[0].profile_name}</p>
