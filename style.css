@@ -1,4 +1,4 @@
-#btn-category:focus {
+.active {
   background-color: red;
   color: white;
 }

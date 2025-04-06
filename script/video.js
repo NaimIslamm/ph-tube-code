@@ -20,7 +20,14 @@ const loadVideos = () => {
 const loadCatagoriesVideo = (id) => {
   fetch(`https://openapi.programming-hero.com/api/phero-tube/category/${id}`)
     .then((res) => res.json())
-    .then((data) => displayVideos(data.category))
+    .then((data) => {
+      // shbar active class remove kro
+      removeActiveClass();
+      // loadCatagoriesVideo() click hole id class k active koro
+      const activeBtn = document.getElementById(`btn-${id}`);
+      activeBtn.classList.add("active");
+      displayVideos(data.category);
+    })
     .catch((error) => console.log(error));
 };
 // display the time---------------------------------------------------------
@@ -33,6 +40,16 @@ function getTime(time) {
   return `${hour} hour ${minute}minute ${remainingSecond} second ago`;
 }
 // display the time--------------------------------------------------------
+
+// remove active class-----------------------------------------------------
+const removeActiveClass = () => {
+  const buttons = document.getElementsByClassName("category-btn");
+  console.log(buttons);
+  for (const btn of buttons) {
+    btn.classList.remove("active");
+  }
+};
+// remove active class-----------------------------------------------------
 
 // category_id: '1001',
 // category: 'Music'
@@ -48,7 +65,7 @@ const displayCatagories = (categories) => {
     console.log(item);
     const buttonContainer = document.createElement("div");
     buttonContainer.innerHTML = `
-    <button id="btn-category" onclick="loadCatagoriesVideo(${item.category_id})" class="btn">${item.category}</button>`;
+    <button id="btn-${item.category_id}" onclick="loadCatagoriesVideo(${item.category_id})" class="btn category-btn">${item.category}</button>`;
     categoryContainer.append(buttonContainer);
     // ekhane jehetu btn click hobe tai ekhane onclick dewar jnno button banate hbe...eivabe dewa jaccena tai Comment-out korlam...
 
@@ -92,7 +109,7 @@ const displayVideos = (videos) => {
   // eta""dewar ane hcce empty kore dewa holo/empty video, clear kore debe,click hole oi related video show korbe by id--
   videosContainer.innerHTML = "";
 
-  // ekhn j khane click korle api theke kono data pabena sei click a no content command show korte hbe-----
+  // ekhn j khane click korle API theke kono data pabena sei click a no content command show korte hbe-----
 
   if (videos.length === 0) {
     videosContainer.classList.remove("grid");
