@@ -30,6 +30,22 @@ const loadCatagoriesVideo = (id) => {
     })
     .catch((error) => console.log(error));
 };
+
+// load details------------------------------------------------------------
+const loadDetails = async (videoData) => {
+  const uri = `https://openapi.programming-hero.com/api/phero-tube/video/${videoData}`;
+  const res = await fetch(uri);
+  const data = await res.json();
+  displayDetails(data.video);
+};
+const displayDetails = (detailsData) => {
+  const detailContainer = document.getElementById("modal-content");
+  detailContainer.innerHTML = `
+  <img src="${detailsData.thumbnail}"/>
+  <p>${detailsData.description}</p>`;
+  // way-1
+  document.getElementById("showModalData").click();
+};
 // display the time---------------------------------------------------------
 
 function getTime(time) {
@@ -151,6 +167,10 @@ const displayVideos = (videos) => {
    }</div>
     
     <p>${video.others.views}</p>
+    <p><button onclick="loadDetails('${
+      video.video_id
+    }')" class="btn btn-sm btn-error">Details</button></p>
+  
     </div>
   </div>`;
     videosContainer.append(card);
