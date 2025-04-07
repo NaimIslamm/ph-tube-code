@@ -5,25 +5,29 @@ const loadCatagories = () => {
   //   fetch the data
   fetch("https://openapi.programming-hero.com/api/phero-tube/categories")
     .then((res) => res.json())
+    // .then((data) => console.log(data))
     .then((data) => displayCatagories(data.categories))
     .catch((error) => console.log(error));
 };
 
-// load video---------------------------------------------------------------
+// fetch load & display the video on html---------------------------------------------------------------
 const loadVideos = () => {
   fetch("https://openapi.programming-hero.com/api/phero-tube/videos")
     .then((res) => res.json())
+    // .then((data) => console.log(data))
     .then((data) => displayVideos(data.videos))
     .catch((error) => console.log(error));
 };
-// load video by clicking categories---------------
+// load video by category id & clicking categories---------------
+// parameter (id) oi category id ta load hbe jei button click hbe sai button jei related category----
 const loadCatagoriesVideo = (id) => {
   fetch(`https://openapi.programming-hero.com/api/phero-tube/category/${id}`)
     .then((res) => res.json())
+    // .then((data) => console.log("id from API", data))
     .then((data) => {
       // shbar active class remove kro
       removeActiveClass();
-      // loadCatagoriesVideo() click hole id class k active koro
+      // loadCatagoriesVideo() click hole id class k active koro er jnno dynamic id bosate hoice button a...r id k variable diye dhorte parle seta jemon khusi temon vabe kaj kora jai like add korlam ("active") class------------------
       const activeBtn = document.getElementById(`btn-${id}`);
       activeBtn.classList.add("active");
       displayVideos(data.category);
@@ -31,7 +35,7 @@ const loadCatagoriesVideo = (id) => {
     .catch((error) => console.log(error));
 };
 
-// load details------------------------------------------------------------
+// load details & display ------------------------------------------------------------
 const loadDetails = async (videoData) => {
   const uri = `https://openapi.programming-hero.com/api/phero-tube/video/${videoData}`;
   const res = await fetch(uri);
@@ -46,6 +50,8 @@ const displayDetails = (detailsData) => {
   // way-1
   document.getElementById("showModalData").click();
 };
+// load & display details ------------------------------------------------------------
+
 // display the time---------------------------------------------------------
 
 function getTime(time) {
@@ -122,7 +128,7 @@ const cardDemo = {
 
 const displayVideos = (videos) => {
   const videosContainer = document.getElementById("video-container");
-  // eta""dewar ane hcce empty kore dewa holo/empty video, clear kore debe,click hole oi related video show korbe by id--
+  // eta""dewar mane hcce empty kore dewa holo, clear kore debe all video kiccu show korbena except click hole oi related video show korbe by id-------
   videosContainer.innerHTML = "";
 
   // ekhn j khane click korle API theke kono data pabena sei click a no content command show korte hbe-----
@@ -133,11 +139,11 @@ const displayVideos = (videos) => {
   } else {
     videosContainer.classList.add("grid");
   }
-  // loop---
+  // loop-------------------------
   videos.forEach((video) => {
-    console.log(video);
+    console.log("all video", video);
     const card = document.createElement("div");
-    card.classList = "card card-compact w-88";
+    card.classList = "card card-compact ";
     card.innerHTML = `<figure class="h-[200px] relative">
     <img class="w-full h=full object-center object-cover"
       src=${video.thumbnail} />
@@ -158,6 +164,7 @@ const displayVideos = (videos) => {
     <h2 class="font-bold">${video.title}</h2>
     <div class="flex items-center gap-2"><p>${video.authors[0].profile_name}</p>
    ${
+     // conditional if..else bosano jaina tai evabe condition dite hoi---
      video.authors[0].verified === true
        ? `<img
          class="w-5"
@@ -166,7 +173,7 @@ const displayVideos = (videos) => {
        : ""
    }</div>
     
-    <p>${video.others.views}</p>
+    <p>${video.others.views} Views</p>
     <p><button onclick="loadDetails('${
       video.video_id
     }')" class="btn btn-sm btn-error">Details</button></p>
